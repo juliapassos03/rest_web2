@@ -1,0 +1,147 @@
+
+### ==================== CATEGORIAS ====================
+
+### Criar categoria
+POST http://localhost:8081/categorias
+Content-Type: application/json
+
+{
+  "nome": "RPG"
+}
+
+###
+
+### Criar outra categoria
+POST http://localhost:8081/categorias
+Content-Type: application/json
+
+{
+  "nome": "Aventura"
+}
+
+###
+
+### Listar todas as categorias
+GET http://localhost:8081/categorias
+
+###
+
+### Buscar categoria por ID
+GET http://localhost:8081/categorias/1
+
+###
+
+### Atualizar categoria
+PUT http://localhost:8081/categorias/1
+Content-Type: application/json
+
+{
+  "nome": "RPG e Fantasia"
+}
+
+###
+
+### Deletar categoria
+DELETE http://localhost:8081/categorias/1
+
+###
+
+### ==================== JOGOS ====================
+
+### Criar jogo (com categorias pelo ID)
+POST http://localhost:8081/jogos
+Content-Type: application/json
+
+{
+  "nome": "The Legend of Zelda",
+  "descricao": "Jogo de aventura e exploração",
+  "categoriaIds": [1, 2]
+}
+
+###
+
+### Criar jogo sem categorias
+POST http://localhost:8081/jogos
+Content-Type: application/json
+
+{
+  "nome": "Minecraft",
+  "descricao": "Jogo de construção e sobrevivência"
+}
+
+###
+
+### Listar todos os jogos
+GET http://localhost:8081/jogos
+
+###
+
+### Buscar jogo por ID
+GET http://localhost:8081/jogos/1
+
+###
+
+### Atualizar jogo
+PUT http://localhost:8081/jogos/1
+Content-Type: application/json
+
+{
+  "nome": "The Legend of Zelda: Breath of the Wild",
+  "descricao": "Jogo de mundo aberto",
+  "categoriaIds": [1]
+}
+
+###
+
+### Deletar jogo
+DELETE http://localhost:8081/jogos/1
+
+###
+
+### ==================== TESTES DE ERRO ====================
+
+### 404 - Jogo não encontrado
+GET http://localhost:8081/jogos/999
+
+###
+
+### 404 - Categoria não encontrada
+GET http://localhost:8081/categorias/999
+
+###
+
+### 400 - Criar jogo sem nome (campo obrigatório)
+POST http://localhost:8081/jogos
+Content-Type: application/json
+
+{
+  "descricao": "Sem nome"
+}
+
+###
+
+### 400 - Criar categoria sem nome (campo obrigatório)
+POST http://localhost:8081/categorias
+Content-Type: application/json
+
+{
+  "nome": ""
+}
+
+###
+
+### 404 - Criar jogo com categoria inexistente
+POST http://localhost:8081/jogos
+Content-Type: application/json
+
+{
+  "nome": "Jogo Teste",
+  "categoriaIds": [999]
+}
+
+###
+
+### 409 - Deletar categoria associada a um jogo (erro de integridade)
+DELETE http://localhost:8081/categorias/1
+
+###
