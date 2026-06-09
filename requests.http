@@ -1,9 +1,80 @@
 
+### ==================== AUTENTICAÇÃO ====================
+
+### Login - retorna o token JWT
+POST http://localhost:8081/auth/login
+Content-Type: application/json
+
+{
+  "login": "admin",
+  "senha": "admin123"
+}
+
+###
+
+### Login com credenciais erradas - espera 401
+POST http://localhost:8081/auth/login
+Content-Type: application/json
+
+{
+  "login": "admin",
+  "senha": "senhaerrada"
+}
+
+###
+
+### ==================== USUÁRIOS ====================
+
+### Cadastrar novo usuário (público, sem token)
+POST http://localhost:8081/usuarios
+Content-Type: application/json
+
+{
+  "nome": "Julia Helena",
+  "login": "julia",
+  "senha": "julia123"
+}
+
+###
+
+### Listar todos os usuários (requer token)
+GET http://localhost:8081/usuarios
+Authorization: Bearer <TOKEN>
+
+###
+
+### Buscar usuário por ID (requer token)
+GET http://localhost:8081/usuarios/1
+Authorization: Bearer <TOKEN>
+
+###
+
+### Atualizar usuário (requer token)
+PUT http://localhost:8081/usuarios/1
+Content-Type: application/json
+Authorization: Bearer <TOKEN>
+
+{
+  "nome": "Julia Helena dos Passos",
+  "login": "julia",
+  "senha": "novasenha123"
+}
+
+###
+
+### Deletar usuário (requer token)
+DELETE http://localhost:8081/usuarios/2
+Authorization: Bearer <TOKEN>
+
+###
+
 ### ==================== CATEGORIAS ====================
 
-### Criar categoria
+### Criar categoria (requer token JWT)
+# Substitua <TOKEN> pelo valor retornado no /auth/login
 POST http://localhost:8081/categorias
 Content-Type: application/json
+Authorization: Bearer <TOKEN>
 
 {
   "nome": "RPG"
@@ -11,9 +82,10 @@ Content-Type: application/json
 
 ###
 
-### Criar outra categoria
+### Criar outra categoria (requer token JWT)
 POST http://localhost:8081/categorias
 Content-Type: application/json
+Authorization: Bearer <TOKEN>
 
 {
   "nome": "Aventura"
@@ -31,9 +103,10 @@ GET http://localhost:8081/categorias/1
 
 ###
 
-### Atualizar categoria
+### Atualizar categoria (requer token JWT)
 PUT http://localhost:8081/categorias/1
 Content-Type: application/json
+Authorization: Bearer <TOKEN>
 
 {
   "nome": "RPG e Fantasia"
@@ -41,16 +114,18 @@ Content-Type: application/json
 
 ###
 
-### Deletar categoria
+### Deletar categoria (requer token JWT)
 DELETE http://localhost:8081/categorias/1
+Authorization: Bearer <TOKEN>
 
 ###
 
 ### ==================== JOGOS ====================
 
-### Criar jogo (com categorias pelo ID)
+### Criar jogo (requer token JWT)
 POST http://localhost:8081/jogos
 Content-Type: application/json
+Authorization: Bearer <TOKEN>
 
 {
   "nome": "The Legend of Zelda",
@@ -60,9 +135,10 @@ Content-Type: application/json
 
 ###
 
-### Criar jogo sem categorias
+### Criar jogo sem categorias (requer token JWT)
 POST http://localhost:8081/jogos
 Content-Type: application/json
+Authorization: Bearer <TOKEN>
 
 {
   "nome": "Minecraft",
@@ -81,9 +157,10 @@ GET http://localhost:8081/jogos/1
 
 ###
 
-### Atualizar jogo
+### Atualizar jogo (requer token JWT)
 PUT http://localhost:8081/jogos/1
 Content-Type: application/json
+Authorization: Bearer <TOKEN>
 
 {
   "nome": "The Legend of Zelda: Breath of the Wild",
@@ -93,8 +170,9 @@ Content-Type: application/json
 
 ###
 
-### Deletar jogo
+### Deletar jogo (requer token JWT)
 DELETE http://localhost:8081/jogos/1
+Authorization: Bearer <TOKEN>
 
 ###
 
