@@ -54,7 +54,7 @@ public class UsuarioService implements UserDetailsService {
 
     public Usuario buscarPorId(Long id) {
         return repository.findById(id)
-            .orElseThrow(() -> new RegistroNaoEncontradoException("Usuário com id " + id + " não encontrado"));
+            .orElseThrow(() -> new RegistroNaoEncontradoException("Usuário", id));
     }
 
     public Usuario atualizar(Long id, Usuario dados) {
