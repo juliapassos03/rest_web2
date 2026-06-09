@@ -30,9 +30,15 @@ POST http://localhost:8081/usuarios
 Content-Type: application/json
 
 {
-  "nome": "Julia Helena",
+  "nome": "Julia",
   "login": "julia",
   "senha": "julia123"
+}
+
+{
+  "nome": "Yasmin",
+  "login": "yasmin",
+  "senha": "yasmin123"
 }
 
 ###

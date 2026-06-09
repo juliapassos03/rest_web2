@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -22,22 +21,19 @@ public class SecurityConfig {
 
     private final UsuarioService usuarioService;
     private final JwtFilter jwtFilter;
+    private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(UsuarioService usuarioService, JwtFilter jwtFilter) {
+    public SecurityConfig(UsuarioService usuarioService, JwtFilter jwtFilter, PasswordEncoder passwordEncoder) {
         this.usuarioService = usuarioService;
         this.jwtFilter = jwtFilter;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(usuarioService);
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
 
@@ -52,11 +48,21 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Login e cadastro de novo usuário são públicos
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
-                // Todos os demais endpoints exigem autenticação
                 .anyRequest().authenticated()
+            )
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, e) -> {
+                    response.setContentType("application/json");
+                    response.setStatus(401);
+                    response.getWriter().write("{\"erro\": \"Token ausente ou invalido\"}");
+                })
+                .accessDeniedHandler((request, response, e) -> {
+                    response.setContentType("application/json");
+                    response.setStatus(403);
+                    response.getWriter().write("{\"erro\": \"Acesso negado\"}");
+                })
             )
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
