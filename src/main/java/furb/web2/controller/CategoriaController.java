@@ -5,62 +5,49 @@ import furb.web2.service.CategoriaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/categorias")
-
 public class CategoriaController {
 
     @Autowired
     private CategoriaService service;
 
-    // INSERT
+    // POST /categorias — INSERT
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-
-    public Categoria inserir(
-            @RequestBody Categoria categoria) {
-
-        return service.salvar(categoria);
+    public ResponseEntity<Categoria> inserir(@RequestBody Categoria categoria) {
+        Categoria salva = service.salvar(categoria);
+        return ResponseEntity.status(HttpStatus.CREATED).body(salva);
     }
 
-    // SELECT ALL
+    // GET /categorias — SELECT ALL
     @GetMapping
-
-    public List<Categoria> listarTodas() {
-
-        return service.listarTodas();
+    public ResponseEntity<List<Categoria>> listarTodas() {
+        return ResponseEntity.ok(service.listarTodas());
     }
 
-    // SELECT BY ID
+    // GET /categorias/{id} — SELECT BY ID
     @GetMapping("/{id}")
-
-    public Categoria buscarPorId(
-            @PathVariable Long id) {
-
-        return service.buscarPorId(id);
+    public ResponseEntity<Categoria> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
-    // UPDATE
+    // PUT /categorias/{id} — UPDATE
     @PutMapping("/{id}")
-
-    public Categoria atualizar(
+    public ResponseEntity<Categoria> atualizar(
             @PathVariable Long id,
             @RequestBody Categoria categoria) {
-
-        return service.atualizar(id, categoria);
+        return ResponseEntity.ok(service.atualizar(id, categoria));
     }
 
-    // DELETE
+    // DELETE /categorias/{id} — DELETE
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-
-    public void deletar(
-            @PathVariable Long id) {
-
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

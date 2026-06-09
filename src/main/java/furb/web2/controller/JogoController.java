@@ -1,66 +1,54 @@
 package furb.web2.controller;
 
+import furb.web2.dto.JogoRequestDTO;
 import furb.web2.model.Jogo;
 import furb.web2.service.JogoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/jogos")
-
 public class JogoController {
 
     @Autowired
     private JogoService service;
 
-    // INSERT
+    // POST /jogos — INSERT
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-
-    public Jogo inserir(
-            @RequestBody Jogo jogo) {
-
-        return service.salvar(jogo);
+    public ResponseEntity<Jogo> inserir(@RequestBody JogoRequestDTO dto) {
+        Jogo salvo = service.salvar(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
-    // SELECT ALL
+    // GET /jogos — SELECT ALL
     @GetMapping
-
-    public List<Jogo> listarTodos() {
-
-        return service.listarTodos();
+    public ResponseEntity<List<Jogo>> listarTodos() {
+        return ResponseEntity.ok(service.listarTodos());
     }
 
-    // SELECT BY ID
+    // GET /jogos/{id} — SELECT BY ID
     @GetMapping("/{id}")
-
-    public Jogo buscarPorId(
-            @PathVariable Long id) {
-
-        return service.buscarPorId(id);
+    public ResponseEntity<Jogo> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
-    // UPDATE
+    // PUT /jogos/{id} — UPDATE
     @PutMapping("/{id}")
-
-    public Jogo atualizar(
+    public ResponseEntity<Jogo> atualizar(
             @PathVariable Long id,
-            @RequestBody Jogo jogo) {
-
-        return service.atualizar(id, jogo);
+            @RequestBody JogoRequestDTO dto) {
+        return ResponseEntity.ok(service.atualizar(id, dto));
     }
 
-    // DELETE
+    // DELETE /jogos/{id} — DELETE
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-
-    public void deletar(
-            @PathVariable Long id) {
-
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }
